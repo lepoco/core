@@ -2,13 +2,13 @@
 <phpunit colors="true" bootstrap="vendor/autoload.php">
     <testsuites>
         <testsuite name="MVC tests">
-            <directory>src/Core/Mvc/tests/</directory>
+            <directory>src/Lepo/Core/Mvc/tests/</directory>
         </testsuite>
         <testsuite name="Dependency Injection tests">
-            <directory>src/Core/DependencyInjection/tests/</directory>
+            <directory>src/Lepo/Core/DependencyInjection/tests/</directory>
         </testsuite>
         <testsuite name="Routing tests">
-            <directory>src/Core/Routing/tests/</directory>
+            <directory>src/Lepo/Core/Routing/tests/</directory>
         </testsuite>
     </testsuites>
 </phpunit>

@@ -1,5 +1,5 @@
 {
-    "name": "core/core",
+    "name": "lepo/core",
     "type": "library",
     "version": "0.1.0",
     "license": "MIT",
@@ -42,7 +42,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Lepo\\Core\\": "src/Core/"
+            "Lepo\\Core\\": "src/Lepo/Core/"
         },
         "exclude-from-classmap": [
             "**/tests/"
