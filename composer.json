@@ -34,11 +34,11 @@
         "php": ">=8.1"
     },
     "replace": {
-        "core/dependencyinjection": "self.version",
-        "core/hosting": "self.version",
-        "core/mvc": "self.version",
-        "core/orm": "self.version",
-        "core/routing": "self.version"
+        "lepo/core-dependencyinjection": "self.version",
+        "lepo/core-hosting": "self.version",
+        "lepo/core-mvc": "self.version",
+        "lepo/core-orm": "self.version",
+        "lepo/core-routing": "self.version"
     },
     "autoload": {
         "psr-4": {
