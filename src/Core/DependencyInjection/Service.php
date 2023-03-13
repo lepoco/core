@@ -1,14 +1,12 @@
 <?php
 
 /**
- * This Source Code Form is subject to the terms of the GNU GPL-3.0.
- * If a copy of the GPL was not distributed with this file,
- * You can obtain one at https://www.gnu.org/licenses/gpl-3.0.en.html.
+ * This Source Code Form is subject to the terms of the MIT license.
  * Copyright (C) 2023 Leszek Pomianowski and Forward Contributors.
  * All Rights Reserved.
  *
- * Based on .NET ASP.NET Core
- * Copyright (c) .NET Foundation. All rights reserved.
+ * Based on .NET ASP.NET Core or .NET Core source code.
+ * Copyright (c) .NET Foundation and/or Microsoft. All rights reserved.
  * Licensed under the Apache License, Version 2.0 or MIT.
  */
 
@@ -18,24 +16,31 @@ namespace Lepo\Core\DependencyInjection;
 
 use ReflectionClass;
 
+/**
+ * Base implementation of the service container.
+ */
 class Service implements IService
 {
-    private readonly ServiceLifetime $lifetime;
+    protected readonly ServiceLifetime $lifetime;
 
-    private readonly array $parameters;
+    protected readonly array $parameters;
 
-    private readonly string $serviceClass;
+    protected readonly string $serviceClass;
 
-    private readonly ?string $serviceContract;
+    protected readonly ?string $serviceContract;
 
-    private mixed $serviceInstance = null;
+    protected readonly bool $isHosted;
+
+    protected mixed $serviceInstance = null;
 
     public function __construct(
         ServiceLifetime $lifetime,
         string $serviceClassOrContract,
-        ?string $serviceClass = null
+        ?string $serviceClass = null,
+        bool $isHosted = false
     ) {
         $this->lifetime = $lifetime;
+        $this->isHosted = $isHosted;
 
         if ($serviceClass == null) {
             $this->serviceContract = null;
@@ -48,52 +53,80 @@ class Service implements IService
         $this->parameters = $this->collectParametersFromReflection();
     }
 
+    /**
+     * Creates a service descriptor with defined object.
+     */
     public static function fromObject(
-        string $serviceContractName,
-        mixed $serviceObject
+        mixed $serviceObject,
+        string $serviceClassOrContract,
+        ?string $serviceClass = null
     ): self {
-        $service = new self(ServiceLifetime::Scoped, $serviceContractName);
+        $service = new self(ServiceLifetime::Scoped, $serviceClassOrContract, $serviceClass);
         $service->setInstance($serviceObject);
 
         return $service;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getType(): string
     {
         return $this->serviceClass;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getContract(): ?string
     {
         return $this->serviceContract;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getParameters(): array
     {
         return $this->parameters;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function isHosted(): bool
     {
-        return false;
+        return $this->isHosted;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function isTransient(): bool
     {
         return $this->lifetime === ServiceLifetime::Transient;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getInstance(): mixed
     {
         return $this->serviceInstance;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function setInstance(mixed $object): void
     {
         $this->serviceInstance = $object;
     }
 
-    private function collectParametersFromReflection(): array
+    /**
+     * @inheritdoc
+     */
+    protected function collectParametersFromReflection(): array
     {
         $serviceReflection = new ReflectionClass($this->serviceClass);
         $serviceConstructor = $serviceReflection->getConstructor();

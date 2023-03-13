@@ -8,12 +8,8 @@
 
 declare(strict_types=1);
 
-namespace Lepo\Core\Tests\Mocks;
+namespace Lepo\Core\Orm\Tests;
 
-final class WeatherService
-{
-    public function getTemperature(): int
-    {
-        return 12;
-    }
-}
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\TestDox;
+use PHPUnit\Framework\TestCase;

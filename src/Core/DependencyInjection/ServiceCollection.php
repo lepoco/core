@@ -19,7 +19,7 @@ namespace Lepo\Core\DependencyInjection;
  */
 class ServiceCollection implements IServiceCollection, IServiceProvider
 {
-    private array $services = [];
+    protected array $services = [];
 
     /**
      * @inheritdoc
@@ -48,31 +48,68 @@ class ServiceCollection implements IServiceCollection, IServiceProvider
     /**
      * @inheritdoc
      */
-    public function addHostedService(string $serviceClassName): void
+    public function addHostedService(string $serviceTypeName): void
     {
         $this->services[] =
-            new Service(ServiceLifetime::Scoped, $serviceClassName);
+            new Service(ServiceLifetime::Scoped, $serviceTypeName, null, true);
     }
 
     /**
      * @inheritdoc
      */
-    public function addScoped(string $serviceTypeOrContractName, ?string $serviceClassName = null): void
+    public function addScoped(string $serviceTypeOrContractName, ?string $serviceTypeName = null): void
     {
+        if ($this->hasService($serviceTypeOrContractName)) {
+            throw new DiException("Service {$serviceTypeOrContractName} already registered");
+        }
+
+        if ($serviceTypeName !== null) {
+            if ($this->hasService($serviceTypeName)) {
+                throw new DiException("Service {$serviceTypeName} already registered");
+            }
+        }
+
         $this->services[] =
-            new Service(ServiceLifetime::Scoped, $serviceTypeOrContractName, $serviceClassName);
+            new Service(ServiceLifetime::Scoped, $serviceTypeOrContractName, $serviceTypeName);
     }
 
     /**
      * @inheritdoc
      */
-    public function addTransient(string $serviceTypeOrContractName, ?string $serviceClassName = null): void
+    public function addTransient(string $serviceTypeOrContractName, ?string $serviceTypeName = null): void
     {
+        if ($this->hasService($serviceTypeOrContractName)) {
+            throw new DiException("Service {$serviceTypeOrContractName} already registered");
+        }
+
+        if ($serviceTypeName !== null) {
+            if ($this->hasService($serviceTypeName)) {
+                throw new DiException("Service {$serviceTypeName} already registered");
+            }
+        }
+
         $this->services[] =
-            new Service(ServiceLifetime::Transient, $serviceTypeOrContractName, $serviceClassName);
+            new Service(ServiceLifetime::Transient, $serviceTypeOrContractName, $serviceTypeName);
     }
 
-    private function getServiceInstance(IService $service): mixed
+    protected function hasService(string $serviceTypeOrContractName): bool
+    {
+        /**
+         * @var IService $singleService
+         */
+        foreach ($this->services as $singleService) {
+            if (
+                $singleService->getContract() === $serviceTypeOrContractName
+                || $singleService->getType() === $serviceTypeOrContractName
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected function getServiceInstance(IService $service): mixed
     {
         if ($service->isTransient()) {
             return $this->makeService($service);
@@ -87,13 +124,14 @@ class ServiceCollection implements IServiceCollection, IServiceProvider
         return $service->getInstance();
     }
 
-    private function makeService(IService $service): mixed
+    protected function makeService(IService $service): mixed
     {
         $serviceParameters = $service->getParameters();
 
         if (empty($serviceParameters)) {
             return new ($service->getType())();
         }
+
         $arguments = [];
 
         /**

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<ruleset name="lepo-core">
-  <description>lepo-core Coding Standards</description>
+<ruleset name="lepo/core">
+  <description>lepo/core Coding Standards</description>
 
   <rule ref="PSR12"/>
 
@@ -50,6 +50,7 @@
 
   <rule ref="Generic.Commenting.Todo"/>
 
-  <exclude-pattern type="relative">^/vendor/*</exclude-pattern>
+  <exclude-pattern type="relative">^/etc/*</exclude-pattern>
   <exclude-pattern type="relative">^/tests/*</exclude-pattern>
+  <exclude-pattern type="relative">^/vendor/*</exclude-pattern>
 </ruleset>

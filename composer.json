@@ -1,47 +1,52 @@
 {
-    "name": "lepo/core",
-    "description": "PHP dependency injection and hosting",
+    "name": "core/core",
     "type": "library",
-    "license": "MIT",
     "version": "0.1.0",
+    "license": "MIT",
+    "description": "The lepo/core PHP framework",
     "keywords": [
-        "di",
+        "lepo",
+        "core",
+        "framework",
         "asp.net",
+        "di",
         "dependency",
         "injection",
-        "hosting",
-        "routing",
+        "mvc",
+        "model",
+        "view",
+        "controller",
         "net",
         "service",
-        "list",
-        "monitoring",
-        "monitorowanie",
-        "packages",
         "package"
     ],
-    "autoload": {
-        "psr-4": {
-            "Lepo\\Core\\": "src/"
-        },
-        "classmap": [
-            "src/"
-        ]
-    },
+    "homepage": "https://github.com/lepoco/core",
     "authors": [
         {
             "name": "Leszek Pomianowski"
+        },
+        {
+            "name": "lepo/core Community",
+            "homepage": "https://github.com/lepoco/core"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
-        "php": "^8.1 || ^8.2"
+        "php": ">=8.1"
     },
-    "require-dev": {
-        "phpunit/phpunit": "^10"
+    "replace": {
+        "core/dependencyinjection": "self.version",
+        "core/hosting": "self.version",
+        "core/mvc": "self.version",
+        "core/orm": "self.version",
+        "core/routing": "self.version"
     },
-    "config": {
-        "allow-plugins": {
-            "pestphp/pest-plugin": true
-        }
-    }
+    "autoload": {
+        "psr-4": {
+            "Lepo\\Core\\": "src/Core/"
+        },
+        "exclude-from-classmap": [
+            "**/tests/"
+        ]
+    },
+    "minimum-stability": "dev"
 }

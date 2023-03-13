@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<phpunit colors="true" bootstrap="vendor/autoload.php">
+    <testsuites>
+        <testsuite name="MVC tests">
+            <directory>src/Core/Mvc/tests/</directory>
+        </testsuite>
+        <testsuite name="Dependency Injection tests">
+            <directory>src/Core/DependencyInjection/tests/</directory>
+        </testsuite>
+        <testsuite name="Routing tests">
+            <directory>src/Core/Routing/tests/</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
